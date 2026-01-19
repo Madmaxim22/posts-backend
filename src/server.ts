@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import cors from 'cors';
 import { faker } from '@faker-js/faker';
 import { Post, Comment, ApiResponse } from './types/index.js';
 import { generateId } from './utils/idGenerator.js';
@@ -7,9 +6,21 @@ import { generateId } from './utils/idGenerator.js';
 const app = express();
 const PORT = 3000;
 
-// Middleware
-app.use(cors());
 app.use(express.json());
+
+// Middleware для CORS заголовков
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+  // Обработка preflight запросов
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // Генерация тестовых постов
 const generatePosts = (count: number = 10): Post[] => {

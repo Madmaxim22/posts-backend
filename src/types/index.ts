@@ -19,6 +19,7 @@ export interface Comment {
 }
 
 export interface ApiResponse<T> {
-  status: 'ok';
-  data: T;
+  status: 'ok' | 'error';
+  data?: T;
+  message?: string;
 }

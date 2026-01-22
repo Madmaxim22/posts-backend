@@ -17,9 +17,10 @@ app.use((req, res, next) => {
   // Обработка preflight запросов
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);
-  } else {
-    next();
+    return;
   }
+  
+  next();
 });
 
 // Генерация тестовых постов
@@ -74,7 +75,7 @@ app.get('/posts/:postId/comments/latest', (req: Request<{ postId: string }>, res
     return res.status(404).json({
       status: 'error',
       message: 'Post not found'
-    });
+    } as ApiResponse<Comment[]>);
   }
   
   // Генерируем комментарии для указанного поста
@@ -82,7 +83,7 @@ app.get('/posts/:postId/comments/latest', (req: Request<{ postId: string }>, res
     return res.status(400).json({
       status: 'error',
       message: 'Post ID is required'
-    });
+    } as ApiResponse<Comment[]>);
   }
   
   const comments = generateComments(postId, 3);
